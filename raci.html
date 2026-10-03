@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capital One Transformation Governance - Member B</title>
+<style>
+:root{
+  --co-red:#d03027;
+  --co-red-dark:#a91610;
+  --co-blue:#003b70;
+  --co-blue-2:#0060a9;
+  --co-light-blue:#eaf4fb;
+  --co-pale:#f5f9fc;
+  --ink:#172033;
+  --muted:#5f6b7a;
+  --line:#d7e1e9;
+  --white:#fff;
+  --shadow:0 12px 30px rgba(0,59,112,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Segoe UI,Aptos,Arial,sans-serif;background:linear-gradient(180deg,#f7fbfe 0,#fff 420px);color:var(--ink);line-height:1.55}
+.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,var(--co-blue) 0%,#005797 72%,var(--co-red) 140%);color:#fff;padding:56px 24px 48px;border-bottom:6px solid var(--co-red)}
+.hero:after{content:"";position:absolute;right:-100px;top:-150px;width:470px;height:470px;border:55px solid rgba(255,255,255,.08);border-radius:50%}
+.hero-inner,.container{max-width:1280px;margin:auto}
+.eyebrow{letter-spacing:.13em;text-transform:uppercase;font-size:.78rem;font-weight:800;opacity:.83}
+h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.05;margin:.35rem 0 .65rem;max-width:850px}
+.team{font-size:1rem;color:#dcecf8}
+.container{padding:34px 24px 60px}
+.section{margin:0 0 34px}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:14px}
+h2{font-size:1.55rem;color:var(--co-blue);margin:0}
+.section-note{color:var(--muted);font-size:.92rem}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.role-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line)}
+.role{background:#fff;padding:15px 18px}
+.role:nth-child(4n+1),.role:nth-child(4n+4){background:var(--co-pale)}
+.role b{color:var(--co-blue)}
+.toolbar{display:grid;grid-template-columns:1.35fr .8fr auto;gap:12px;padding:16px;background:linear-gradient(90deg,var(--co-light-blue),#fff);border-bottom:1px solid var(--line)}
+label{font-size:.78rem;font-weight:800;color:var(--co-blue);display:block;margin:0 0 5px;text-transform:uppercase;letter-spacing:.05em}
+input,select,button{font:inherit}
+input,select{width:100%;height:44px;border:1px solid #bfcbd5;border-radius:10px;padding:0 12px;background:#fff;color:var(--ink);outline:none}
+input:focus,select:focus{border-color:var(--co-blue-2);box-shadow:0 0 0 3px rgba(0,96,169,.15)}
+.reset{align-self:end;height:44px;border:0;border-radius:10px;padding:0 18px;background:var(--co-red);color:#fff;font-weight:800;cursor:pointer}
+.reset:hover{background:var(--co-red-dark)}
+.result-count{padding:9px 16px;color:var(--muted);font-size:.9rem;border-bottom:1px solid var(--line)}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:separate;border-spacing:0;min-width:950px}
+th{position:sticky;top:0;background:var(--co-blue);color:#fff;padding:14px 13px;text-align:left;font-size:.88rem;z-index:2}
+th:first-child{border-radius:0}
+td{padding:14px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:nth-child(even){background:var(--co-pale)}
+tbody tr:hover{background:#e7f3fb}
+tbody tr.hidden{display:none}
+.decision{font-weight:800;color:var(--co-blue)}
+.badge{display:inline-block;font-size:.71rem;font-weight:900;letter-spacing:.04em;border-radius:999px;padding:3px 8px;margin-right:5px;margin-bottom:5px}
+.badge-r{background:#dcecff;color:#064e86}.badge-a{background:#ffe4e2;color:#9f1d16}.badge-c{background:#e7f5ec;color:#21653a}.badge-i{background:#f1edf9;color:#5a3a86}
+.empty{display:none;padding:30px;text-align:center;color:var(--muted)}
+.rationale-list{display:grid;gap:12px}
+details{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 6px 18px rgba(0,59,112,.06);overflow:hidden}
+summary{list-style:none;cursor:pointer;padding:16px 52px 16px 18px;font-weight:800;color:var(--co-blue);position:relative}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";position:absolute;right:18px;top:11px;font-size:1.7rem;color:var(--co-red);transition:.2s}
+details[open] summary:after{transform:rotate(45deg)}
+details[open] summary{background:var(--co-light-blue);border-bottom:1px solid var(--line)}
+.rationale-body{padding:16px 18px 18px}
+.accountable{font-weight:800;color:var(--co-red-dark);margin-bottom:7px}
+.footer{margin-top:38px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--muted);font-size:.88rem}
+@media(max-width:800px){.role-grid{grid-template-columns:1fr}.role:nth-child(n){background:#fff}.role:nth-child(even){background:var(--co-pale)}.toolbar{grid-template-columns:1fr}.reset{width:100%}.hero{padding-top:40px}.section-head{align-items:start;flex-direction:column}.footer{flex-direction:column;gap:6px}}
+@media print{body{background:#fff}.hero{padding:20px;background:#fff;color:#000;border-bottom:3px solid var(--co-red)}.team{color:#333}.toolbar,.result-count{display:none}.card,details{box-shadow:none}.container{max-width:none;padding:16px}.table-wrap{overflow:visible}table{min-width:0;font-size:9pt}th{position:static}details{break-inside:avoid}details:not([open]) .rationale-body{display:block}summary:after{display:none}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="hero-inner"><div class="eyebrow">Transformation Governance</div><h1>Capital One RACI Matrix</h1><div class="team">Member B · Aster Nguyen (A) | Colin Forbes (B) | Nicolas Byrd (C)</div></div></header>
+<main class="container">
+<section class="section"><div class="section-head"><div><h2>Role Key</h2><div class="section-note">Enterprise roles referenced throughout the governance model.</div></div></div><div class="card"><div class="role-grid">
+<div class="role"><b>CFO:</b> Chief Financial Officer</div><div class="role"><b>CPO:</b> Chief Product Officer</div>
+<div class="role"><b>CIO:</b> Chief Information Officer</div><div class="role"><b>Head Enterprise Data Tech:</b> Head of Enterprise Data Technology</div>
+<div class="role"><b>CTO:</b> Chief Technology Officer</div><div class="role"><b>BU GMs:</b> Business Unit General Managers</div>
+<div class="role"><b>CDO:</b> Chief Data Officer</div><div class="role"><b>Eno Product Lead / Eno Lead:</b> Executive responsible for Eno product strategy, performance, and expansion</div>
+<div class="role"><b>CISO:</b> Chief Information Security Officer</div><div class="role"><b>Slingshot GM:</b> General Manager responsible for Slingshot commercial performance and priorities</div>
+</div></div></section>
+
+<section class="section"><div class="section-head"><div><h2>Interactive Governance RACI Matrix</h2><div class="section-note">Search decisions or filter by role and RACI assignment.</div></div></div><div class="card">
+<div class="toolbar"><div><label for="search">Search</label><input id="search" type="search" placeholder="Search decisions or roles..."></div><div><label for="roleFilter">Filter by role</label><select id="roleFilter"><option value="">All roles</option><option>CFO</option><option>CIO</option><option>CTO</option><option>CDO</option><option>CISO</option><option>CPO</option><option>Chief Product Officer</option><option>Head Enterprise Data Tech</option><option>BU GMs</option><option>Eno Product Lead</option><option>Eno Lead</option><option>Slingshot GM</option></select></div><button class="reset" id="reset" type="button">Reset filters</button></div>
+<div class="result-count" id="resultCount">Showing 7 of 7 decisions</div><div class="table-wrap"><table id="raciTable"><thead><tr><th>Decision</th><th><span class="badge badge-r">R</span>Responsible</th><th><span class="badge badge-a">A</span>Accountable</th><th><span class="badge badge-c">C</span>Consulted</th><th><span class="badge badge-i">I</span>Informed</th></tr></thead><tbody>
+<tr><td class="decision">Budget Allocation</td><td>CIO; CPO</td><td>CFO</td><td>CTO; CDO; CISO; BU GMs</td><td>Eno Product Lead; Slingshot GM</td></tr>
+<tr><td class="decision">Architecture Standards</td><td>CISO; Head Enterprise Data Tech</td><td>CTO</td><td>CIO; CDO; Eno Lead; Slingshot GM</td><td>BU GMs</td></tr>
+<tr><td class="decision">Data Governance</td><td>CISO; Head Enterprise Data Tech; BU GMs</td><td>CDO</td><td>CIO; CTO; CPO</td><td>Eno Lead; Slingshot GM</td></tr>
+<tr><td class="decision">Initiative Prioritization</td><td>CIO; BU GMs</td><td>CPO</td><td>CFO; CTO; CDO; CISO</td><td>Eno Lead; Slingshot GM</td></tr>
+<tr><td class="decision">Vendor &amp; Partnership Decisions</td><td>CTO; CISO</td><td>CIO</td><td>CFO; CDO; CPO; Slingshot GM</td><td>BU GMs; Eno Lead</td></tr>
+<tr><td class="decision">Eno Scale &amp; Channel Expansion</td><td>Eno Product Lead; CISO</td><td>Eno Product Lead</td><td>CIO; CTO; CDO; CPO; BU GMs</td><td>Slingshot GM</td></tr>
+<tr><td class="decision">Slingshot Internal vs. External Priorities</td><td>CTO; Head Enterprise Data Tech</td><td>Slingshot GM</td><td>CFO; CIO; CDO; CPO; BU GMs</td><td>Eno Lead</td></tr>
+</tbody></table></div><div class="empty" id="empty">No decisions match the selected filters.</div></div></section>
+
+<section class="section"><div class="section-head"><div><h2>Accountability Rationales</h2><div class="section-note">Select a decision to expand or collapse its rationale.</div></div></div><div class="rationale-list">
+<details><summary>Budget Allocation</summary><div class="rationale-body"><div class="accountable">Accountable: Chief Financial Officer</div>The CFO is accountable because investment allocation is an enterprise capital decision requiring tradeoffs across initiatives and business priorities. This role can weigh expected value, operating cost, risk exposure, and competing funding demands across the transformation portfolio.</div></details>
+<details><summary>Architecture Standards</summary><div class="rationale-body"><div class="accountable">Accountable: Chief Technology Officer</div>The CTO owns the target architecture and therefore has final authority over enterprise standards and justified exceptions. Central accountability reduces incompatible technology choices that could weaken platform reuse, scalability, security, or modernization.</div></details>
+<details><summary>Data Governance</summary><div class="rationale-body"><div class="accountable">Accountable: Chief Data Officer</div>The CDO owns enterprise expectations for data quality, ownership, classification, access, retention, and acceptable use. Technology, security, and business leaders execute those policies, but the CDO provides one enterprise authority for cross-business data decisions.</div></details>
+<details><summary>Initiative Prioritization</summary><div class="rationale-body"><div class="accountable">Accountable: Chief Product Officer</div>The Chief Product Officer balances customer value, strategic alignment, operational need, and constrained delivery capacity. A single portfolio owner prevents initiatives from competing independently for the same funding and engineering resources.</div></details>
+<details><summary>Vendor and Partnership Decisions</summary><div class="rationale-body"><div class="accountable">Accountable: Chief Information Officer</div>The CIO is accountable because major external technology relationships affect enterprise operations, cost, resilience, security, and long-term platform direction. Technical, security, data, and commercial leaders contribute due diligence before the decision is made.</div></details>
+<details><summary>Eno Scale and Channel Expansion</summary><div class="rationale-body"><div class="accountable">Accountable: Eno Product Lead</div>The Eno Product Lead owns recurring decisions about adoption, service performance, channel readiness, operating support, and risk evidence. This makes expansion a continuing product-governance decision rather than a one-time launch approval.</div></details>
+<details><summary>Slingshot Internal vs. External Priorities</summary><div class="rationale-body"><div class="accountable">Accountable: Slingshot General Manager</div>The Slingshot GM owns tradeoffs between external customer commitments and Capital One's internal platform needs. A single commercial owner is answerable for product performance, customer obligations, and escalation when shared resources cannot satisfy both priorities.</div></details>
+</div></section>
+<div class="footer"><span>Member B | Transformation Governance</span><span>Interactive RACI View</span></div>
+</main>
+<script>
+const search=document.getElementById('search');
+const role=document.getElementById('roleFilter');
+const rows=[...document.querySelectorAll('#raciTable tbody tr')];
+const count=document.getElementById('resultCount');
+const empty=document.getElementById('empty');
+function filterRows(){
+ const q=search.value.trim().toLowerCase();
+ const r=role.value.toLowerCase();
+ let shown=0;
+ rows.forEach(row=>{const text=row.textContent.toLowerCase();const ok=(!q||text.includes(q))&&(!r||text.includes(r));row.classList.toggle('hidden',!ok);if(ok)shown++;});
+ count.textContent=`Showing ${shown} of ${rows.length} decisions`;
+ empty.style.display=shown?'none':'block';
+}
+search.addEventListener('input',filterRows);role.addEventListener('change',filterRows);
+document.getElementById('reset').addEventListener('click',()=>{search.value='';role.value='';filterRows();search.focus();});
+</script>
+</body></html>
