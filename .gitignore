@@ -1,0 +1,5 @@
+.DS_Store — macOS folder metadata.
+Thumbs.db — the Windows equivalent.
+*.log — the * matches any filename ending in .log.
+node_modules/ — the trailing slash ignores an entire folder.
+.env — the conventional filename for local configuration holding keys and passwords.
