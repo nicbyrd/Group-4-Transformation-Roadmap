@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QBR Dashboard: Capital One Cloud and Data Transformation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1E2A36; --muted:#5D6B78; --faint:#8995A1;
+    --rule:#D5DCE3; --canvas:#E9EDF1; --paper:#FFFFFF;
+    --band1:#E3E8ED; --band2:#EDF1F4; --band3:#F7F9FA;
+    --on:#23724A; --on-bg:#E4F2EA;
+    --risk:#A86A0C; --risk-bg:#FBF0DA;
+    --off:#B23A2E; --off-bg:#F9E3E0;
+    --idle:#5D6B78; --idle-bg:#ECEFF2;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--canvas);color:var(--ink);
+    font-family:"Libre Franklin",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+  .toolbar{max-width:1056px;margin:20px auto 10px;display:flex;justify-content:space-between;align-items:center;
+    font-size:13px;color:var(--muted);padding:0 4px}
+  .toolbar button{font:inherit;font-size:13px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);
+    padding:6px 12px;border-radius:6px;cursor:pointer}
+  .toolbar button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .scroller{overflow-x:auto;padding:0 4px 24px}
+
+  /* One US Letter landscape page at 96dpi */
+  .page{width:1056px;height:816px;margin:0 auto;background:var(--paper);padding:26px 30px 18px;
+    display:grid;grid-template-rows:auto auto 1fr auto auto;gap:14px;position:relative;
+    box-shadow:0 1px 3px rgba(30,42,54,.12)}
+
+  /* Header */
+  header.top{display:grid;grid-template-columns:1fr 430px;gap:24px;align-items:stretch}
+  .title h1{font-size:25px;line-height:1.15;font-weight:800;margin:0 0 6px;letter-spacing:-.01em}
+  .title p{margin:0;font-size:13px;color:var(--muted);line-height:1.45}
+  .title .q{display:inline-block;margin-top:8px;font-size:13px;font-weight:600;color:var(--ink);
+    border:1px solid var(--rule);border-radius:4px;padding:3px 8px}
+  .health{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;
+    background:var(--risk-bg);border-radius:10px;padding:14px 18px}
+  .lamp{width:62px;height:62px;border-radius:50%;background:var(--risk);display:grid;place-items:center;
+    color:#fff;font-weight:800;font-size:13px;letter-spacing:.02em}
+  .health h2{margin:0 0 4px;font-size:17px;font-weight:700;color:#6E4508}
+  .health p{margin:0;font-size:13px;line-height:1.4;color:#4A3610}
+
+  /* Phase track */
+  .track{display:grid;grid-template-columns:1fr 1fr 1fr;position:relative;height:30px}
+  .track::before{content:"";position:absolute;left:16.6%;right:16.6%;top:9px;height:3px;background:var(--rule)}
+  .track .fill{position:absolute;left:16.6%;width:33.3%;top:9px;height:3px;background:var(--ink)}
+  .stop{position:relative;text-align:center;font-size:12px;color:var(--muted)}
+  .stop i{display:block;width:21px;height:21px;margin:0 auto 3px;border-radius:50%;background:var(--paper);
+    border:3px solid var(--rule);position:relative;z-index:1}
+  .stop.done i{background:var(--ink);border-color:var(--ink)}
+  .stop.now i{border-color:var(--ink);background:var(--paper)}
+  .stop.now{color:var(--ink);font-weight:600}
+  .gate{position:absolute;left:66.6%;top:1px;transform:translateX(-50%);z-index:2;text-align:center}
+  .gate b{display:block;width:16px;height:16px;margin:2px auto 0;background:var(--risk);transform:rotate(45deg)}
+  .gate span{position:absolute;top:-1px;left:22px;white-space:nowrap;font-size:11px;font-weight:600;color:var(--risk)}
+
+  /* Phase columns */
+  .phases{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;min-height:0}
+  .phase{border:1px solid var(--rule);border-radius:10px;padding:10px 14px;display:flex;flex-direction:column;gap:6px;min-height:0}
+  .phase.current{border:2px solid var(--ink);padding:9px 13px}
+  .phase-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;
+    padding-bottom:8px;border-bottom:1px solid var(--rule)}
+  .phase-head h3{margin:0;font-size:16px;font-weight:700}
+  .phase-head p{margin:2px 0 0;font-size:11.5px;color:var(--muted);line-height:1.35}
+  .metric{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:4px 0 6px;border-bottom:1px solid var(--band2)}
+  .metric:last-child{border-bottom:0}
+  .tags{grid-column:1/-1;display:flex;gap:6px;font-size:10.5px;color:var(--muted)}
+  .tags span{border:1px solid var(--rule);border-radius:3px;padding:0 5px;line-height:16px}
+  .tags .org{border-color:#9DB3C7;color:#2F5576;background:#EEF3F8}
+  .mname{grid-column:1/-1;font-size:12.5px;font-weight:600;line-height:1.3}
+  .val{font-size:22px;font-weight:700;line-height:1.1}
+  .val small{font-size:11.5px;font-weight:500;color:var(--muted);margin-left:6px}
+  .pill{align-self:center;font-size:11px;font-weight:700;border-radius:20px;padding:3px 9px 3px 7px;white-space:nowrap}
+  .pill::before{margin-right:4px}
+  .pill.on{background:var(--on-bg);color:var(--on)} .pill.on::before{content:"✓"}
+  .pill.risk{background:var(--risk-bg);color:var(--risk)} .pill.risk::before{content:"!"}
+  .pill.off{background:var(--off-bg);color:var(--off)} .pill.off::before{content:"✕"}
+  .pill.idle{background:var(--idle-bg);color:var(--idle)} .pill.idle::before{content:"○"}
+  .chart{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--muted)}
+  .chart svg{flex:1;height:16px}
+  .trend{white-space:nowrap;min-width:92px;text-align:right}
+  .trend.better{color:var(--on)} .trend.worse{color:var(--off)}
+  .note{margin-top:auto;font-size:11px;color:var(--muted);line-height:1.4;background:var(--band3);
+    border-radius:6px;padding:7px 9px}
+
+  /* Decisions */
+  .decisions{display:grid;grid-template-columns:150px 1fr 1fr 1fr;gap:14px;border-top:2px solid var(--ink);padding-top:10px}
+  .decisions h3{margin:0;font-size:15px;line-height:1.2;font-weight:700}
+  .decisions .lead p{margin:4px 0 0;font-size:11px;color:var(--muted);line-height:1.4}
+  .dec{font-size:11.5px;line-height:1.38}
+  .dec h4{margin:0 0 3px;font-size:12.5px;line-height:1.3;font-weight:700}
+  .dec h4 em{font-style:normal;color:var(--muted);font-weight:600;margin-right:4px}
+  .dec p{margin:0 0 4px}
+  .dec .meta{color:var(--muted);font-size:10.5px}
+
+  footer.foot{display:flex;justify-content:space-between;font-size:10px;color:var(--faint)}
+  .legend{display:flex;gap:12px;align-items:center}
+  .legend .pill{font-size:9.5px;padding:1px 7px 1px 5px}
+
+  /* Annotation markers */
+  .mk{position:absolute;width:18px;height:18px;border-radius:50%;background:#2F5576;color:#fff;
+    font-size:10px;font-weight:700;display:grid;place-items:center;z-index:5;pointer-events:none}
+  body.clean .mk{display:none}
+
+  /* Annotations page */
+  .notes{width:1056px;margin:24px auto 0;background:var(--paper);padding:30px 40px 36px;
+    box-shadow:0 1px 3px rgba(30,42,54,.12)}
+  .notes h2{font-size:21px;margin:0 0 4px;font-weight:800}
+  .notes > p{margin:0 0 18px;color:var(--muted);font-size:13px;max-width:72ch;line-height:1.5}
+  .ann{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 36px}
+  .ann div{display:grid;grid-template-columns:24px 1fr;gap:8px;font-size:12.5px;line-height:1.5}
+  .ann b.n{width:20px;height:20px;border-radius:50%;background:#2F5576;color:#fff;font-size:10.5px;display:grid;place-items:center}
+  .ann h4{margin:0 0 2px;font-size:13px}
+  .ann p{margin:0;max-width:62ch}
+  table.defs{width:100%;border-collapse:collapse;margin-top:22px;font-size:11.5px}
+  .defs th,.defs td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
+  .defs th{font-weight:700;background:var(--band3)}
+
+  @media print{
+    @page{size:letter landscape;margin:0}
+    body{background:#fff}
+    .toolbar{display:none}
+    .scroller{padding:0;overflow:visible}
+    .page,.notes{box-shadow:none;margin:0}
+    .notes{page-break-before:always;width:auto}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span>Page 1 is the dashboard. Page 2 explains the design decisions.</span>
+  <button id="toggle" type="button" aria-pressed="false">Hide annotation markers</button>
+</div>
+
+<div class="scroller">
+<main class="page" id="dash">
+
+  <header class="top">
+    <div class="title">
+      <h1>Capital One cloud and data transformation</h1>
+      <p>Quarterly business review for the senior leadership team. Seven initiatives across cloud, applications, data, Eno and Slingshot.</p>
+      <span class="q">Q4 review: Walk phase, Run gate due before next QBR</span>
+    </div>
+    <div class="health" role="status" aria-label="Overall health: amber">
+      <div class="lamp">AMBER</div>
+      <div>
+        <h2>Behind plan at the Run gate</h2>
+        <p>Foundations are complete, but the Walk to Run gate is at risk: Eno pilot task completion is below target and the Slingshot GM role is still unfilled.</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="track" aria-label="Phase progress">
+    <div class="fill"></div>
+    <div class="stop done"><i></i>Crawl, Q1 to Q2: complete</div>
+    <div class="stop now"><i></i>Walk, Q3 to Q4: in progress</div>
+    <div class="stop"><i></i>Run, Q5 onward: not started</div>
+    <div class="gate"><b></b><span>Run gate decision</span></div>
+  </div>
+
+  <section class="phases" id="phases"></section>
+
+  <section class="decisions" aria-labelledby="dec-h">
+    <div class="lead">
+      <h3 id="dec-h">Decisions required this quarter</h3>
+      <p>To be made before the next QBR. Each one clears a red or amber item above.</p>
+    </div>
+    <div class="dec">
+      <h4><em>D1</em>Approve, condition or defer Eno expansion (I4 to I6)?</h4>
+      <p>Proposed: conditional approval. Expand to one more channel only once pilot task completion reaches 75%.</p>
+      <div class="meta">RACI: Eno scale and channel expansion. Accountable: Eno Product Lead. Clears: M4. Due: Run gate.</div>
+    </div>
+    <div class="dec">
+      <h4><em>D2</em>Fund and fill the Slingshot GM role before I7 starts?</h4>
+      <p>The Slingshot GM is accountable for internal vs external priorities, but the role is still open, so that recurring decision has no owner.</p>
+      <div class="meta">RACI: Budget allocation. Accountable: CFO. Clears: M8. Due: Run gate.</div>
+    </div>
+    <div class="dec">
+      <h4><em>D3</em>Extend the Snowflake tools (I5) beyond the first business line?</h4>
+      <p>Access time is on target; cost savings are behind. Option: extend scope now or hold one quarter to close the cost gap.</p>
+      <div class="meta">RACI: Initiative prioritization. Accountable: CPO. Clears: M6. Due: next QBR.</div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>Illustrative values for a proposed plan. Not Capital One data. Targets and thresholds proposed by the team. Initiatives and sources: Member A's roadmap.</span>
+    <span class="legend">
+      <span class="pill on">On track</span><span class="pill risk">At risk</span><span class="pill off">Off track</span><span class="pill idle">Not started</span>
+    </span>
+  </footer>
+
+  <!-- annotation markers -->
+  <span class="mk" style="left:586px;top:20px">A</span>
+  <span class="mk" style="left:20px;top:133px">B</span>
+  <span class="mk" style="left:12px;top:192px">C</span>
+  <span class="mk" style="left:12px;top:352px">D</span>
+  <span class="mk" style="left:338px;top:322px">E</span>
+  <span class="mk" style="left:12px;top:652px">F</span>
+  <span class="mk" style="left:922px;top:408px">G</span>
+</main>
+
+<section class="notes" aria-labelledby="ann-h">
+  <h2 id="ann-h">Annotated design decisions</h2>
+  <p>The dashboard has one job: let leadership decide in ten minutes whether the transformation is ahead of, on or behind plan, and why. Every element below either answers that question or names what must happen next.</p>
+
+  <div class="ann">
+    <div><b class="n">A</b><div><h4>Overall signal, top right</h4><p>The verdict is the largest colored element and is read first. The headline states the verdict in words ("behind plan at the Run gate") and the sentence names the two causes, so the "why" arrives with the color. Rule: green if every phase is on track; amber if any phase is at risk or a not-yet-started phase has a readiness item off track; red only if an in-progress phase is off track. Run has not started, so its red item escalates to a decision (D2) rather than turning the whole program red.</p></div></div>
+    <div><b class="n">B</b><div><h4>Phase track with the gate marked</h4><p>A three-stop timeline shows where the program sits in Crawl, Walk and Run, and an amber diamond marks the gate decision. This ties the dashboard to Member A's roadmap and explains why this quarter matters: it is the gate review.</p></div></div>
+    <div><b class="n">C</b><div><h4>One column per phase, worst status wins</h4><p>Each phase shows only its two or three most important metrics. Phase status equals its worst metric, so a single problem cannot be averaged away. The current phase (Walk) has a heavier border so the eye lands there after the verdict.</p></div></div>
+    <div><b class="n">D</b><div><h4>Bullet charts instead of gauges or bars</h4><p>Each metric uses a bullet chart: the dark bar is the current value, the vertical tick is the target, and the grey bands are the off track, at risk and on track zones. It shows actual against target and the threshold bands in a strip 16 pixels tall, where a gauge would need several times the space. Better is always to the right, so the scale is reversed for the "lower is better" access-time metric (M5).</p></div></div>
+    <div><b class="n">E</b><div><h4>Status never relies on color alone</h4><p>Every pill pairs color with a symbol and a word (✓ on track, ! at risk, ✕ off track, ○ not started), so the page still works printed in greyscale or for color-blind readers. The trend line ("from 63%") shows direction since last quarter.</p></div></div>
+    <div><b class="n">F</b><div><h4>Decisions sit on the page, not in an appendix</h4><p>Each decision names the RACI decision it falls under, its Accountable role from Member B's RACI, the metric it clears and when it is due. A leadership team that sees a red item also sees the decision that fixes it. Decision content belongs to Member B; this layout is Member C's.</p></div></div>
+    <div><b class="n">G</b><div><h4>Organizational change is measured, not assumed</h4><p>M8 tracks whether the operating roles Member A says Run requires (named in Member B's RACI as the Eno Product Lead and the Slingshot GM) are actually staffed. It carries an "org change" tag and is the only off track item, which shows that the main risk is people rather than technology.</p></div></div>
+  </div>
+
+  <table class="defs" aria-label="Metric definitions">
+    <thead><tr><th>ID</th><th>Metric</th><th>Initiative</th><th>Type</th><th>Target</th><th>At risk band</th><th>Why it is here</th></tr></thead>
+    <tbody id="defs"></tbody>
+  </table>
+</section>
+</div>
+
+<script>
+const metrics = [
+  {id:"M1",phase:"crawl",init:"I1",initName:"AWS cloud migration",type:"Leading",
+   name:"Selected Walk workloads ready on AWS",target:100,current:100,prior:88,amber:90,min:0,max:100,dir:"up",
+   f:v=>v+"%",band:"90–99%",why:"Confirms cloud capacity exists for I5 before it scales."},
+  {id:"M2",phase:"crawl",init:"I2",initName:"Application modernization",type:"Leading",
+   name:"Eno-facing services live at target availability",target:8,current:8,prior:6,amber:7,min:0,max:8,dir:"up",
+   f:v=>v+" of 8",band:"7 of 8",why:"I4 depends on usable service interfaces (A's I2 to I4 dependency)."},
+  {id:"M3",phase:"crawl",init:"I3",initName:"Data ecosystem modernization",type:"Leading",
+   name:"In-scope datasets available in Snowflake",target:90,current:91,prior:84,amber:80,min:0,max:100,dir:"up",
+   f:v=>v+"%",band:"80–89%",why:"I5 manages this data environment; without it the tools have nothing to manage."},
+  {id:"M4",phase:"walk",init:"I4",initName:"Eno pilot",type:"Leading",
+   name:"Pilot task completion without fallback to another channel",target:75,current:68,prior:63,amber:65,min:40,max:100,dir:"up",
+   f:v=>v+"%",band:"65–74%",why:"A's readiness outcome for I4; predicts whether I6 expansion will work."},
+  {id:"M5",phase:"walk",init:"I5",initName:"Internal Snowflake management tools",type:"Leading",
+   name:"Median time from approved data request to usable access",target:2.0,current:1.6,prior:3.1,amber:3.0,min:0,max:5,dir:"down",
+   f:v=>v.toFixed(1)+" days",band:"2.1–3.0 days",why:"A's readiness outcome for I5; shows the self-service tools are being used."},
+  {id:"M6",phase:"walk",init:"I5",initName:"Internal Snowflake management tools",type:"Lagging",
+   name:"Cloud data cost per workload, realized change vs Q1 baseline",target:15,current:11,prior:6,amber:10,min:0,max:20,dir:"up",
+   f:v=>"−"+v+"%",band:"−10% to −14%",why:"Confirms the cost-visibility component of I5 is saving money, not just reporting it."},
+  {id:"M7",phase:"run",init:"I6",initName:"Eno expansion",type:"Lagging",
+   name:"Customer satisfaction change for pilot users vs servicing baseline",target:5,current:6,prior:4,amber:3,min:0,max:10,dir:"up",
+   f:v=>"+"+v+" pts",band:"+3 to +4 pts",why:"Confirmed customer outcome that justifies expansion (A: pilot evidence feeds I6). Measured on the I4 cohort."},
+  {id:"M8",phase:"run",init:"I6, I7",initName:"Eno expansion and Slingshot commercialization",type:"Leading",org:true,
+   name:"Run operating roles staffed: Eno Product Lead, Slingshot GM",target:2,current:1,prior:1,amber:1.5,min:0,max:2,dir:"up",
+   f:v=>Math.round(v)+" of 2",band:"none (binary)",why:"Organizational change health: A states Run cannot be sustained without these roles."}
+];
+
+const phases = [
+  {key:"crawl",name:"Crawl",when:"Q1 to Q2",inits:"I1 AWS cloud migration, I2 Application modernization, I3 Data ecosystem modernization",
+   note:"Gate passed in Q2. Wider migration continues but no longer blocks Walk."},
+  {key:"walk",name:"Walk",when:"Q3 to Q4",current:true,inits:"I4 Eno pilot, I5 Internal Snowflake management tools",note:null},
+  {key:"run",name:"Run",when:"Q5 onward",inits:"I6 Eno expansion, I7 Slingshot commercialization",notStarted:true,
+   note:"Not started. These metrics measure readiness for the gate, so the phase is judged on whether it can start."}
+];
+
+const rank = {on:0,risk:1,off:2};
+const label = {on:"On track",risk:"At risk",off:"Off track",idle:"Not started"};
+
+function status(m){
+  if(m.dir==="up") return m.current>=m.target?"on":m.current>=m.amber?"risk":"off";
+  return m.current<=m.target?"on":m.current<=m.amber?"risk":"off";
+}
+
+function bullet(m){
+  const W=200,H=16;
+  // position so that "better" is always to the right
+  const x = v => { let t=(v-m.min)/(m.max-m.min); if(m.dir==="down") t=1-t; return Math.max(0,Math.min(1,t))*W; };
+  const a=x(m.amber), t=x(m.target), c=x(m.current);
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img"
+    aria-label="${m.f(m.current)} against target ${m.f(m.target)}">
+    <rect x="0" y="0" width="${a}" height="${H}" fill="var(--band1)"/>
+    <rect x="${a}" y="0" width="${t-a}" height="${H}" fill="var(--band2)"/>
+    <rect x="${t}" y="0" width="${W-t}" height="${H}" fill="var(--band3)"/>
+    <rect x="0" y="5" width="${c}" height="6" fill="var(--ink)"/>
+    <rect x="${Math.min(t,W-2)}" y="1" width="2" height="14" fill="var(--ink)"/>
+  </svg>`;
+}
+
+function trend(m){
+  const better = m.dir==="up" ? m.current>m.prior : m.current<m.prior;
+  if(m.current===m.prior) return `<span class="trend">No change</span>`;
+  return `<span class="trend ${better?"better":"worse"}">${better?"▲":"▼"} from ${m.f(m.prior)}</span>`;
+}
+
+const host=document.getElementById("phases");
+phases.forEach(p=>{
+  const ms=metrics.filter(m=>m.phase===p.key);
+  const worst=ms.map(status).sort((a,b)=>rank[b]-rank[a])[0];
+  const pill = p.notStarted
+    ? `<span class="pill idle">Not started</span>`
+    : `<span class="pill ${worst}">${label[worst]}</span>`;
+  const sub = p.notStarted ? `<div class="mname" style="font-size:11px;color:var(--muted);font-weight:500">Gate readiness: <span class="pill ${worst}" style="font-size:10px;padding:1px 7px 1px 5px">${label[worst]}</span></div>` : "";
+  host.insertAdjacentHTML("beforeend",`
+    <article class="phase ${p.current?"current":""}" aria-label="${p.name} phase">
+      <div class="phase-head">
+        <div><h3>${p.name} <span style="font-weight:500;color:var(--muted);font-size:12.5px">${p.when}</span></h3>
+        <p>${p.inits}</p></div>${pill}
+      </div>
+      ${sub}
+      ${ms.map(m=>{const s=status(m);return `
+      <div class="metric">
+        <div class="tags"><span>${m.id}</span><span>${m.init}</span><span>${m.type}</span>${m.org?'<span class="org">Org change</span>':""}</div>
+        <div class="mname">${m.name}</div>
+        <div class="val">${m.f(m.current)}<small>target ${m.dir==="down"?"≤ ":""}${m.f(m.target)}</small></div>
+        <span class="pill ${s}">${label[s]}</span>
+        <div class="chart">${bullet(m)}${trend(m)}</div>
+      </div>`}).join("")}
+      ${p.note?`<div class="note">${p.note}</div>`:""}
+    </article>`);
+});
+
+document.getElementById("defs").innerHTML = metrics.map(m=>`
+  <tr><td>${m.id}</td><td>${m.name}</td><td>${m.init} ${m.initName}</td><td>${m.type}${m.org?", org change":""}</td>
+  <td>${m.dir==="down"?"≤ ":""}${m.f(m.target)}</td><td>${m.band}</td><td>${m.why}</td></tr>`).join("");
+
+const btn=document.getElementById("toggle");
+btn.addEventListener("click",()=>{
+  const on=document.body.classList.toggle("clean");
+  btn.setAttribute("aria-pressed",on);
+  btn.textContent=on?"Show annotation markers":"Hide annotation markers";
+});
+</script>
+</body>
+</html>
