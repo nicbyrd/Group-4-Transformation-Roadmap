@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About Us | Capital One Transformation Roadmap</title>
+<meta name="description" content="A sequenced roadmap, governance matrix and quarterly dashboard for seven documented Capital One initiatives.">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1E2A36; --muted:#5D6B78; --faint:#8995A1;
+    --rule:#D5DCE3; --canvas:#F2F5F7; --paper:#FFFFFF; --soft:#F5F7F9;
+    --link:#2F5576; --amber:#A86A0C; --amber-bg:#FBF0DA;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--canvas);color:var(--ink);line-height:1.6;
+    font-family:"Libre Franklin",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:var(--link);text-underline-offset:3px}
+  a:hover{color:var(--ink)}
+  :focus-visible{outline:2px solid var(--link);outline-offset:3px;border-radius:3px}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px}
+
+  /* top bar */
+  .bar{background:var(--paper);border-bottom:1px solid var(--rule)}
+  .bar .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;height:56px}
+  .brand{font-weight:800;font-size:14px;letter-spacing:.01em;color:var(--ink);text-decoration:none}
+  nav{display:flex;gap:4px}
+  nav a{font-size:14px;font-weight:600;color:var(--muted);text-decoration:none;padding:6px 12px;border-radius:6px}
+  nav a:hover{background:var(--soft);color:var(--ink)}
+  nav a[aria-current="page"]{color:var(--ink);background:var(--soft)}
+
+  /* hero */
+  .hero{padding:56px 0 40px}
+  .eyebrow{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin:0 0 12px}
+  h1{font-size:clamp(28px,4.4vw,42px);line-height:1.12;font-weight:800;margin:0 0 16px;letter-spacing:-.015em;max-width:20ch}
+  .lede{font-size:18px;color:var(--muted);max-width:60ch;margin:0}
+
+  section.part{padding:40px 0;border-top:1px solid var(--rule)}
+  .part-head{display:flex;align-items:baseline;gap:14px;margin-bottom:22px}
+  .num{font-size:13px;font-weight:700;color:var(--paper);background:var(--ink);border-radius:50%;width:26px;height:26px;display:grid;place-items:center;flex:none;transform:translateY(-2px)}
+  h2{font-size:24px;line-height:1.2;margin:0;font-weight:800;letter-spacing:-.01em}
+
+  /* team */
+  .team{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+  .card{background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:12px}
+  .avatar{width:72px;height:72px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;
+    font-size:22px;font-weight:700;letter-spacing:.02em}
+  img.avatar{object-fit:cover;background:var(--soft);display:block;box-shadow:0 0 0 1px var(--rule)}
+  .card h3{margin:0;font-size:18px;line-height:1.25}
+  .role{margin:-6px 0 0;font-size:13px;font-weight:700;color:var(--link)}
+  .card p{margin:0;font-size:14.5px;color:var(--ink)}
+  .todo{background:var(--amber-bg);color:#6E4508;border-radius:4px;padding:0 4px}
+
+
+  /* team carousel: a three-sided "revolving door"; without JS the cards show as a grid */
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .controls{display:none}
+  .js .carousel{max-width:660px;margin:0 auto}
+  .js .stage{position:relative;height:var(--h,320px);perspective:1800px}
+  .js .team{display:block;position:absolute;inset:0;transform-style:preserve-3d;
+    transform:translateZ(calc(var(--r,180px) * -1)) rotateY(var(--a,0deg));transition:transform .9s cubic-bezier(.65,0,.35,1)}
+  .js .team .card{position:absolute;top:0;left:0;right:0;min-height:var(--h,320px);
+    backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    transform:rotateY(calc(var(--i) * 120deg)) translateZ(var(--r,180px));
+    display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto 1fr;gap:8px 22px;align-content:start;
+    padding:30px 32px;box-shadow:0 8px 28px rgba(30,42,54,.08)}
+  .js .team .card .avatar{grid-row:1/3;width:92px;height:92px;font-size:28px}
+  .js .team .card h3{font-size:22px}
+  .js .team .card .role{font-size:14px}
+  .js .team .card p:not(.role){font-size:16px;line-height:1.65}
+  .js .controls{display:flex;justify-content:center;align-items:center;gap:10px;margin-top:20px;flex-wrap:wrap}
+  .ctl,.dot{font:inherit;cursor:pointer;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+  .ctl:hover,.dot:hover{border-color:var(--ink)}
+  .arrow{width:36px;height:36px;border-radius:50%;font-size:22px;line-height:1;display:grid;place-items:center;padding:0 0 3px}
+  .dots{display:flex;gap:6px}
+  .dot{font-size:13px;font-weight:600;border-radius:20px;padding:6px 14px;color:var(--muted)}
+  .dot[aria-current="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  @media (max-width:560px){
+    .js .team .card{grid-template-columns:1fr;grid-template-rows:auto;padding:24px}
+    .js .team .card .avatar{grid-row:auto;width:72px;height:72px;font-size:22px}
+  }
+  @media (prefers-reduced-motion:reduce){.js .team{transition:none}}
+  @media print{
+    .js .stage{height:auto;perspective:none}
+    .js .team{position:static;transform:none;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .js .team .card{position:static;transform:none;min-height:0;display:flex;box-shadow:none}
+    .controls{display:none!important}
+  }
+
+  /* audience */
+  .audience{background:var(--paper);border:1px solid var(--rule);border-left:4px solid var(--ink);border-radius:12px;padding:24px 26px}
+  .audience p{margin:0;font-size:17px;max-width:68ch}
+  .audience strong{font-weight:700}
+
+  /* benefits */
+  .benefits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+  .benefit{background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:10px}
+  .benefit .tag{align-self:flex-start;font-size:12px;font-weight:700;color:var(--link);background:#EEF3F8;border-radius:4px;padding:2px 8px;text-decoration:none}
+  .benefit .tag:hover{background:var(--ink);color:#fff}
+  .benefit h3{margin:0;font-size:17px;line-height:1.3}
+  .benefit p{margin:0;font-size:14.5px;color:var(--muted)}
+
+  /* novelty */
+  .novelty{background:var(--ink);color:#fff;border-radius:14px;padding:30px 32px}
+  .novelty p{margin:0;font-size:16.5px;line-height:1.7;max-width:70ch;color:#EEF2F5}
+  .novelty p+p{margin-top:14px}
+
+
+  /* reveal on scroll */
+  .js .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+  .js .reveal.in{opacity:1;transform:none}
+
+  .chip,.claim,.ben-tabs [role=tab],.node,.seg button,.raci-chips button{font:inherit;cursor:pointer}
+  .intro{margin:-8px 0 18px;color:var(--muted)}
+
+  /* 2. audience */
+  .persona-tags{display:none;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+  .js .persona-tags{display:flex}
+  .hint{font-size:13px;color:var(--muted)}
+  .chip,.claim{border:1px solid var(--rule);background:var(--paper);color:var(--muted);border-radius:20px;padding:5px 13px;font-size:13px;font-weight:600}
+  .chip:hover,.claim:hover{border-color:var(--ink);color:var(--ink)}
+  .chip[aria-pressed="true"],.claim[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .hl{font-weight:600;background-image:linear-gradient(var(--amber-bg),var(--amber-bg));background-size:0% 100%;background-repeat:no-repeat;transition:background-size .35s ease;border-radius:3px}
+  .hl.on{background-size:100% 100%}
+
+  /* 3. benefits as tabs */
+  .bens{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px;align-items:start}
+  .ben-tabs{display:flex;flex-direction:column;gap:8px}
+  .ben-tabs [role=tab]{display:flex;gap:12px;align-items:flex-start;text-align:left;background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:13px 14px;color:var(--ink)}
+  .ben-tabs [role=tab]:hover{border-color:var(--ink)}
+  .ben-tabs [role=tab][aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .ben-tabs b{display:block;font-size:14.5px;line-height:1.3}
+  .ben-tabs em{font-style:normal;font-size:12px;font-weight:600;opacity:.7}
+  .bn{flex:none;width:24px;height:24px;border-radius:50%;border:1.5px solid currentColor;display:grid;place-items:center;font-size:12px;font-weight:700}
+  .panel{background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:12px}
+  .panel + .panel{margin-top:16px}
+  .js .panel + .panel{margin-top:0}
+  .js .panel[hidden]{display:none}
+  .panel h3{margin:0;font-size:20px;line-height:1.3}
+  .panel > p{margin:0;color:var(--muted);font-size:15px}
+  .tag{align-self:flex-start;font-size:12px;font-weight:700;color:var(--link);background:#EEF3F8;border-radius:4px;padding:2px 8px;text-decoration:none}
+  .go{font-weight:600;font-size:14px;align-self:flex-start}
+  .widget{display:none;background:var(--soft);border-radius:10px;padding:16px 18px;gap:12px;flex-direction:column}
+  .js .widget{display:flex}
+  .w-title{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .w-note{margin:0;font-size:12.5px;color:var(--muted)}
+  .verdict{border-radius:8px;padding:10px 12px;font-size:14px;line-height:1.45;font-weight:500}
+  .verdict.on{background:#E4F2EA;color:#1D5A3A} .verdict.risk{background:var(--amber-bg);color:#6E4508}
+  .verdict.off{background:#F9E3E0;color:#7E241B} .verdict.neutral{background:var(--paper);color:var(--ink);border:1px solid var(--rule)}
+  .verdict b{font-weight:700}
+
+  .slider{display:flex;justify-content:space-between;font-size:14px;font-weight:600}
+  .slider output{font-size:20px;font-weight:800}
+  input[type=range]{width:100%;accent-color:var(--ink)}
+  .scale{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:-6px}
+
+  .dep{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;padding:4px 0}
+  .dep-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+  .dep-col{display:flex;flex-direction:column;justify-content:center;gap:10px;position:relative;z-index:1}
+  .dep-col .node:first-of-type{margin-top:auto} .dep-col .node:last-of-type{margin-bottom:auto}
+  .dep-col{justify-content:flex-start}
+  .dep-h{font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .node{border:1.5px solid var(--rule);background:var(--paper);border-radius:8px;padding:8px 10px;font-size:13px;font-weight:600;text-align:left;color:var(--ink);transition:all .2s}
+  .node:hover{border-color:var(--ink)}
+  .node.slip{background:#B23A2E;border-color:#B23A2E;color:#fff}
+  .node.hit{background:var(--amber-bg);border-color:#A86A0C;color:#6E4508}
+  .node.calm{opacity:.45}
+
+  .raci-chips{display:flex;flex-wrap:wrap;gap:6px}
+  .raci-chips button{border:1px solid var(--rule);background:var(--paper);border-radius:6px;padding:5px 10px;font-size:12.5px;font-weight:600;color:var(--muted)}
+  .raci-chips button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .raci-card{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13.5px}
+  .raci-card .acc{grid-column:1/-1;display:flex;align-items:baseline;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--rule);margin-bottom:2px}
+  .raci-card .acc b{font-size:22px;font-weight:800}
+  .raci-card .acc span{font-size:12px;font-weight:700;color:var(--muted)}
+  .raci-card dt{font-weight:700;color:var(--muted)} .raci-card dd{margin:0}
+  .raci-card .why{grid-column:1/-1;color:var(--muted);margin-top:4px}
+
+  .seg{display:inline-flex;align-self:flex-start;border:1px solid var(--rule);border-radius:8px;padding:3px;gap:3px;background:var(--paper)}
+  .seg button{border:0;background:none;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--muted)}
+  .seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+  .checks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:13.5px}
+  .checks li{display:flex;gap:8px;align-items:center;transition:opacity .25s}
+  .checks li::before{flex:none;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:800}
+  .checks li.ok::before{content:"✓";background:#E4F2EA;color:#23724A}
+  .checks li.bad::before{content:"✕";background:#F9E3E0;color:#B23A2E}
+  .checks.tech li.people{opacity:.25}
+
+  /* 4. novelty */
+  .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+  .stats div{background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:16px}
+  .stats b{display:block;font-size:34px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+  .stats span{font-size:13px;color:var(--muted)}
+  .claims{display:none;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .js .claims{display:flex}
+  .novelty .claim{background:transparent;color:#C9D3DC;border-color:#4A5A69}
+  .novelty .claim:hover{color:#fff;border-color:#fff}
+  .novelty .claim[aria-pressed="true"]{background:#fff;color:var(--ink);border-color:#fff}
+  .novelty [data-s]{transition:opacity .3s,background-color .3s;border-radius:3px}
+  .novelty.focus [data-s]{opacity:.35}
+  .novelty.focus [data-s].on{opacity:1;background:rgba(255,255,255,.1)}
+  .see{display:inline-block;margin-top:14px;color:#fff;font-weight:600}
+  .see:hover{color:#C9D3DC}
+
+  @media (max-width:820px){
+      .bens{grid-template-columns:1fr}
+    .ben-tabs{flex-direction:row;overflow-x:auto;padding-bottom:4px}
+    .ben-tabs [role=tab]{min-width:210px}
+    .stats{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:520px){
+        .dep{gap:12px}
+    .node{font-size:12px;padding:7px 8px}
+    .checks{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .js .reveal{opacity:1;transform:none;transition:none}
+    .hl,.node,.novelty [data-s],.checks li{transition:none}
+  }
+  @media print{
+    .js .reveal{opacity:1;transform:none}
+    .persona-tags,.ben-tabs,.widget,.claims,.see,.intro{display:none!important}
+    .bens{display:block}
+    .js .panel[hidden]{display:flex!important}
+    .js .panel + .panel{margin-top:12px}
+  }
+
+  footer{padding:32px 0 48px;font-size:13px;color:var(--faint);border-top:1px solid var(--rule)}
+  footer p{margin:0 0 4px}
+
+  @media (max-width:820px){
+    .team{grid-template-columns:1fr}
+    .benefits{grid-template-columns:1fr}
+    .hero{padding-top:36px}
+    .novelty{padding:24px 22px}
+  }
+  @media (max-width:520px){
+    .bar .wrap{height:auto;padding-top:10px;padding-bottom:10px;flex-direction:column;align-items:flex-start;gap:6px}
+    nav{flex-wrap:wrap;margin-left:-12px}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<!-- Filenames are the team naming contract: index.html, roadmap.html, raci.html, dashboard.html (lowercase). -->
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="index.html">Capital One Transformation Roadmap</a>
+    <nav aria-label="Site">
+      <a href="index.html" aria-current="page">About</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="raci.html">RACI</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <div class="hero">
+      <p class="eyebrow">About us</p>
+      <h1>Capital One cloud and data transformation</h1>
+      <p class="lede">A sequenced roadmap, a governance matrix and a quarterly dashboard for seven documented Capital One initiatives, built from the company's own public sources.</p>
+    </div>
+
+    <!-- 1. THE TEAM -->
+    <section class="part" aria-labelledby="team-h">
+      <div class="part-head"><span class="num" aria-hidden="true">1</span><h2 id="team-h">The team</h2></div>
+      <div class="carousel" id="team-carousel" role="region" aria-roledescription="carousel" aria-label="Team members">
+        <div class="stage">
+          <div class="team">
+
+        <article class="card" style="--i:0" role="group" aria-roledescription="slide" aria-label="1 of 3: Aster Nguyen" data-name="Aster Nguyen">
+          <!-- To use a photo instead of initials: save a JPG or PNG under about 500 KB in images/ and replace the div with
+               <img class="avatar" src="images/aster-nguyen.jpg" alt="Aster Nguyen" width="72" height="72"> -->
+          <div class="avatar" role="img" aria-label="Initials AN">AN</div>
+          <div>
+            <h3>Aster Nguyen</h3>
+            <p class="role">Roadmap Sequencer</p>
+          </div>
+          <p>Aster owned the transformation roadmap, sequencing seven documented Capital One initiatives into Crawl, Walk and Run phases. Aster drew the dependency map and wrote the phase rationales, labeling what the sources document and what the team proposes. Aster is pursuing dual master's degrees at USF in Financial Analytics and in AI in Business and Enterprise Integration.</p>
+        </article>
+
+        <article class="card" style="--i:1" role="group" aria-roledescription="slide" aria-label="2 of 3: Colin Forbes" data-name="Colin Forbes">
+          <div class="avatar" role="img" aria-label="Initials CF">CF</div>
+          <div>
+            <h3>Colin Forbes</h3>
+            <p class="role">Governance Designer</p>
+          </div>
+          <p>Colin owned the RACI matrix, giving each of seven recurring governance decisions one accountable executive, drawn from Capital One's known leadership roles. Colin wrote the rationale behind each Accountable assignment, and those decisions feed the dashboard's quarterly decision list. Colin has taken part in a new digital system implementation that depended on interdisciplinary roles working together, which is the same cross-functional accountability the RACI addresses.</p>
+        </article>
+
+        <article class="card" style="--i:2" role="group" aria-roledescription="slide" aria-label="3 of 3: Nicolas Byrd" data-name="Nicolas Byrd">
+          <div class="avatar" role="img" aria-label="Initials NB">NB</div>
+          <div>
+            <h3>Nicolas Byrd</h3>
+            <p class="role">Dashboard Designer and Site Editor</p>
+          </div>
+          <p>Nicolas designed the quarterly dashboard, choosing eight leading and lagging metrics tied to named initiatives and building the click-through view that shows whether the transformation is ahead of, on or behind plan. As Site Editor, Nicolas runs this repository and site and keeps initiative names, decisions and metrics consistent across the three pages. Nicolas works on the treasury team at Jabil Inc., a manufacturer, bringing experience with long-term enterprise initiatives and with banking partners.</p>
+        </article>
+
+      </div>
+        </div>
+        <div class="controls">
+          <button type="button" class="ctl arrow" data-dir="-1" aria-label="Previous team member">&#8249;</button>
+          <div class="dots">
+            <button type="button" class="dot" data-go="0" aria-label="Show Aster Nguyen">Aster</button>
+            <button type="button" class="dot" data-go="1" aria-label="Show Colin Forbes">Colin</button>
+            <button type="button" class="dot" data-go="2" aria-label="Show Nicolas Byrd">Nicolas</button>
+          </div>
+          <button type="button" class="ctl arrow" data-dir="1" aria-label="Next team member">&#8250;</button>
+        </div>
+        <p class="sr-only" id="team-live" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- 2. TARGET AUDIENCE -->
+    <section class="part reveal" aria-labelledby="aud-h">
+      <div class="part-head"><span class="num" aria-hidden="true">2</span><h2 id="aud-h">Target audience</h2></div>
+      <div class="audience">
+        <div class="persona-tags" role="group" aria-label="Highlight part of the description">
+          <span class="hint">Highlight:</span>
+          <button type="button" class="chip" data-hl="role" aria-pressed="false">Role</button>
+          <button type="button" class="chip" data-hl="org" aria-pressed="false">Organization</button>
+          <button type="button" class="chip" data-hl="sit" aria-pressed="false">Situation</button>
+        </div>
+        <p>This work is written for <span class="hl" data-k="role">the chief transformation officer</span> of <span class="hl" data-k="org">a large U.S. bank</span> who chairs the executive steering committee for a multi-year cloud and data program. <span class="hl" data-k="sit">At the end of Q4 the committee must decide whether the program moves from Walk to Run.</span> The chair has to show which initiatives are driving any delay, who is accountable for each funding and architecture decision, and whether the organization, not only the technology, is ready to scale.</p>
+      </div>
+    </section>
+
+    <!-- 3. BENEFITS -->
+    <section class="part reveal" aria-labelledby="ben-h" id="benefits">
+      <div class="part-head"><span class="num" aria-hidden="true">3</span><h2 id="ben-h">Benefits to that audience</h2></div>
+      <p class="intro">Each benefit comes with a small working example. Try them.</p>
+      <div class="bens">
+        <div class="ben-tabs" role="tablist" aria-label="Benefits" aria-orientation="vertical">
+          <button type="button" role="tab" id="bt0" aria-controls="bp0" aria-selected="true"><span class="bn">1</span><span><b>Make the Run gate call on evidence</b><em>Dashboard</em></span></button>
+          <button type="button" role="tab" id="bt1" aria-controls="bp1" aria-selected="false" tabindex="-1"><span class="bn">2</span><span><b>See what a slipping initiative puts at risk</b><em>Roadmap</em></span></button>
+          <button type="button" role="tab" id="bt2" aria-controls="bp2" aria-selected="false" tabindex="-1"><span class="bn">3</span><span><b>Confirm who is accountable before money moves</b><em>RACI</em></span></button>
+          <button type="button" role="tab" id="bt3" aria-controls="bp3" aria-selected="false" tabindex="-1"><span class="bn">4</span><span><b>Spot organizational gaps behind green technology</b><em>Dashboard</em></span></button>
+        </div>
+
+        <div class="ben-panels">
+          <article class="panel" role="tabpanel" id="bp0" aria-labelledby="bt0">
+            <a class="tag" href="dashboard.html">Dashboard</a>
+            <h3>Make the Run gate call on evidence</h3>
+            <p>The decisions section sits beside the metrics that bear on each call. For Eno expansion, the chair can approve, condition or defer based on pilot task completion and customer satisfaction change instead of status updates. Dashboard values are illustrative.</p>
+            <div class="widget">
+              <div class="w-title">Try it: move pilot task completion</div>
+              <label class="slider" for="gate-range"><span>Pilot task completion</span><output id="gate-out" for="gate-range">68%</output></label>
+              <input type="range" id="gate-range" min="50" max="90" step="1" value="68">
+              <div class="scale" aria-hidden="true"><span>Defer &lt; 65%</span><span>Condition 65–74%</span><span>Approve &ge; 75%</span></div>
+              <div class="verdict" id="gate-verdict" aria-live="polite"></div>
+              <p class="w-note">Customer satisfaction change is +6 pts against a +5 target. Thresholds come from the dashboard.</p>
+            </div>
+            <a class="go" href="dashboard.html">Open the dashboard &rarr;</a>
+          </article>
+
+          <article class="panel" role="tabpanel" id="bp1" aria-labelledby="bt1">
+            <a class="tag" href="roadmap.html">Roadmap</a>
+            <h3>See what a slipping initiative puts at risk</h3>
+            <p>The roadmap maps two dependency chains: application modernization to the Eno pilot to Eno expansion, and cloud migration plus the data ecosystem to the Snowflake tools to Slingshot. If the Snowflake tools miss their targets, the chair can see at once that Slingshot is affected and decide whether to defer or resequence it.</p>
+            <div class="widget">
+              <div class="w-title">Try it: pick an initiative that slips</div>
+              <div class="dep" id="dep">
+                <svg class="dep-lines" aria-hidden="true"></svg>
+                <div class="dep-col"><span class="dep-h">Crawl</span>
+                  <button type="button" class="node" data-id="I1">I1 Cloud migration</button>
+                  <button type="button" class="node" data-id="I2">I2 App modernization</button>
+                  <button type="button" class="node" data-id="I3">I3 Data ecosystem</button></div>
+                <div class="dep-col"><span class="dep-h">Walk</span>
+                  <button type="button" class="node" data-id="I4">I4 Eno pilot</button>
+                  <button type="button" class="node" data-id="I5">I5 Snowflake tools</button></div>
+                <div class="dep-col"><span class="dep-h">Run</span>
+                  <button type="button" class="node" data-id="I6">I6 Eno expansion</button>
+                  <button type="button" class="node" data-id="I7">I7 Slingshot</button></div>
+              </div>
+              <div class="verdict neutral" id="dep-out" aria-live="polite"></div>
+            </div>
+            <a class="go" href="roadmap.html">Open the roadmap &rarr;</a>
+          </article>
+
+          <article class="panel" role="tabpanel" id="bp2" aria-labelledby="bt2">
+            <a class="tag" href="raci.html">RACI</a>
+            <h3>Confirm who is accountable before money moves</h3>
+            <p>Before approving funding or expansion, the chair can check that each of seven recurring decisions has one accountable owner: the CFO for budget allocation, the CTO for architecture standards, the Eno Product Lead for Eno expansion. A decision with no clear owner is a gap to close first.</p>
+            <div class="widget">
+              <div class="w-title">Try it: pick a decision</div>
+              <div class="raci-chips" id="raci-chips" role="group" aria-label="Recurring decisions"></div>
+              <div class="raci-card" id="raci-card" aria-live="polite"></div>
+            </div>
+            <a class="go" href="raci.html">Open the RACI &rarr;</a>
+          </article>
+
+          <article class="panel" role="tabpanel" id="bp3" aria-labelledby="bt3">
+            <a class="tag" href="dashboard.html">Dashboard</a>
+            <h3>Spot organizational gaps behind green technology</h3>
+            <p>Beyond technical milestones, the dashboard tracks whether the Eno Product Lead and Slingshot GM roles are staffed. The chair can see an operating-model gap that could stall the Run phase even when every technical measure is on track.</p>
+            <div class="widget">
+              <div class="w-title">Try it: change the lens</div>
+              <div class="seg" role="group" aria-label="Readiness view">
+                <button type="button" data-lens="tech" aria-pressed="true">Technology only</button>
+                <button type="button" data-lens="all" aria-pressed="false">Technology and people</button>
+              </div>
+              <ul class="checks" id="lens-list">
+                <li class="ok">Selected workloads ready on AWS: 100%</li>
+                <li class="ok">Eno-facing services live: 8 of 8</li>
+                <li class="ok">Datasets in Snowflake: 91%</li>
+                <li class="ok">Data access time: 1.6 days</li>
+                <li class="ok people">Eno Product Lead: in place</li>
+                <li class="bad people">Slingshot GM: role open</li>
+              </ul>
+              <div class="verdict" id="lens-out" aria-live="polite"></div>
+            </div>
+            <a class="go" href="dashboard.html">Open the dashboard &rarr;</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. NOVELTY STATEMENT -->
+    <section class="part reveal" aria-labelledby="nov-h">
+      <div class="part-head"><span class="num" aria-hidden="true">4</span><h2 id="nov-h">What we added</h2></div>
+      <div class="stats" aria-label="The work at a glance">
+        <div><b data-count="7">7</b><span>initiatives sequenced</span></div>
+        <div><b data-count="7">7</b><span>recurring decisions with one owner</span></div>
+        <div><b data-count="8">8</b><span>leading and lagging metrics</span></div>
+        <div><b data-count="5">5</b><span>Capital One sources</span></div>
+      </div>
+      <div class="novelty" id="novelty">
+        <div class="claims" role="group" aria-label="Highlight a claim">
+          <button type="button" class="claim" data-c="seq" aria-pressed="false">Sequencing</button>
+          <button type="button" class="claim" data-c="src" aria-pressed="false">Sources and evidence</button>
+          <button type="button" class="claim" data-c="dash" aria-pressed="false">Dashboard</button>
+          <button type="button" class="claim" data-c="exp" aria-pressed="false">Practitioner experience</button>
+        </div>
+        <p><span data-s="intro">We treated this as a governance problem as much as a technology plan.</span> <span data-s="seq">Instead of listing initiatives, we sequenced them by dependency, so you can see how cloud migration, application modernization and the data ecosystem make Eno expansion and Slingshot possible, and what slips if one of them does.</span> <span data-s="src">We built it from Capital One's own annual report and engineering articles, and labeled each dependency as documented or proposed, so you can tell your committee which parts are evidence and which are our judgment.</span> <span data-s="dash">The dashboard pairs leading and lagging indicators, links key metrics to the decisions they inform, and defines measures the sources do not publish, such as time to data access and whether the Eno Product Lead and Slingshot GM roles are filled.</span> <span data-s="exp">Our team also brings practitioner experience from corporate treasury work with banking partners on long-term enterprise projects and from a cross-functional digital system rollout, which informs our choice to give each recurring decision one accountable owner and to track staffing, not only milestones.</span></p>
+        <a class="see" id="claim-see" href="roadmap.html" hidden>See it in the roadmap &rarr;</a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Analysis based on public Capital One sources. Phase timing, dependencies, metrics and targets are the team's proposals, and dashboard values are illustrative.</p>
+    <p>This is a student project and is not affiliated with or endorsed by Capital One.</p>
+  </div>
+</footer>
+
+
+<script>
+(function(){
+  const root=document.getElementById("team-carousel"); if(!root) return;
+  const prism=root.querySelector(".team"), stage=root.querySelector(".stage");
+  const cards=[...prism.querySelectorAll(".card")], dots=[...root.querySelectorAll(".dot")];
+  const live=document.getElementById("team-live");
+  const N=cards.length, STEP=360/N;
+  let idx=0, angle=0;
+
+  function layout(){
+    const w=stage.clientWidth;
+    root.style.setProperty("--r",(w/(2*Math.tan(Math.PI/N))).toFixed(1)+"px");
+    cards.forEach(c=>c.style.minHeight="0");
+    const h=Math.max(...cards.map(c=>c.offsetHeight));
+    cards.forEach(c=>c.style.minHeight="");
+    root.style.setProperty("--h",h+"px");
+  }
+  function show(n,announce){
+    const target=((n%N)+N)%N;
+    let delta=target-idx; if(delta>N/2) delta-=N; if(delta<-N/2) delta+=N;
+    if(n-idx===1||n-idx===-1) delta=n-idx;          // arrows always turn the door the same way
+    angle-=delta*STEP; idx=target;
+    prism.style.setProperty("--a",angle+"deg");
+    cards.forEach((c,i)=>{const on=i===idx; c.toggleAttribute("inert",!on); c.setAttribute("aria-hidden",String(!on));});
+    dots.forEach((d,i)=>d.setAttribute("aria-current",String(i===idx)));
+    if(announce){const c=cards[idx]; live.textContent=`Showing ${c.dataset.name}, ${c.querySelector(".role").textContent}`;}
+  }
+
+  root.addEventListener("click",e=>{
+    const a=e.target.closest("[data-dir]"), d=e.target.closest("[data-go]");
+    if(a) show(idx+ +a.dataset.dir,true);
+    else if(d) show(+d.dataset.go,true);
+  });
+  root.addEventListener("keydown",e=>{
+    if(e.key==="ArrowRight") show(idx+1,true);
+    if(e.key==="ArrowLeft") show(idx-1,true);
+  });
+
+  let x0=null;   // swipe on touch screens
+  stage.addEventListener("pointerdown",e=>{x0=e.clientX;});
+  stage.addEventListener("pointerup",e=>{ if(x0==null) return; const dx=e.clientX-x0; x0=null;
+    if(Math.abs(dx)>40) show(idx+(dx<0?1:-1),true); });
+
+  layout(); show(0,false);
+  window.addEventListener("resize",layout);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(layout);
+})();
+</script>
+
+<script>
+(function(){
+  const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const $=(q,r=document)=>r.querySelector(q), $$=(q,r=document)=>[...r.querySelectorAll(q)];
+
+  /* reveal sections as they scroll in */
+  const rev=$$(".reveal");
+  if("IntersectionObserver" in window&&!reduce){
+    const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}),{threshold:.12});
+    rev.forEach(el=>io.observe(el));
+  } else rev.forEach(el=>el.classList.add("in"));
+
+  /* 2. highlight role / organization / situation */
+  $$(".persona-tags .chip").forEach(b=>b.addEventListener("click",()=>{
+    const on=b.getAttribute("aria-pressed")!=="true"; b.setAttribute("aria-pressed",on);
+    $$(`.hl[data-k="${b.dataset.hl}"]`).forEach(h=>h.classList.toggle("on",on));
+  }));
+
+  /* 3. benefit tabs */
+  const tabs=$$(".ben-tabs [role=tab]"), panels=$$(".ben-panels .panel");
+  function select(i,focus){
+    tabs.forEach((t,j)=>{const on=i===j; t.setAttribute("aria-selected",on); t.tabIndex=on?0:-1;});
+    panels.forEach((p,j)=>p.hidden=i!==j);
+    if(focus) tabs[i].focus();
+    if(i===1) requestAnimationFrame(drawDeps);
+  }
+  tabs.forEach((t,i)=>{
+    t.addEventListener("click",()=>select(i,false));
+    t.addEventListener("keydown",e=>{
+      const k=e.key; let n=null;
+      if(k==="ArrowDown"||k==="ArrowRight") n=(i+1)%tabs.length;
+      if(k==="ArrowUp"||k==="ArrowLeft") n=(i-1+tabs.length)%tabs.length;
+      if(k==="Home") n=0; if(k==="End") n=tabs.length-1;
+      if(n!==null){e.preventDefault();select(n,true);}
+    });
+  });
+
+  /* benefit 1: Run gate slider */
+  const gr=$("#gate-range"), go=$("#gate-out"), gv=$("#gate-verdict");
+  function gate(){
+    const v=+gr.value; go.textContent=v+"%";
+    let c,t;
+    if(v>=75){c="on";t="<b>Approve.</b> The pilot meets its 75% target and satisfaction is above target, so expansion can proceed.";}
+    else if(v>=65){c="risk";t="<b>Condition.</b> The pilot is in the at-risk band. Expand to one more channel only once completion reaches 75%.";}
+    else {c="off";t="<b>Defer.</b> The pilot is below the at-risk band. Extend it before committing to expansion.";}
+    gv.className="verdict "+c; gv.innerHTML=t;
+  }
+  gr.addEventListener("input",gate); gate();
+
+  /* benefit 2: dependency slip */
+  const names={I1:"I1 AWS cloud migration",I2:"I2 Application modernization",I3:"I3 Data ecosystem modernization",I4:"I4 Eno pilot",I5:"I5 Internal Snowflake management tools",I6:"I6 Eno expansion",I7:"I7 Slingshot commercialization"};
+  const edges=[["I1","I5"],["I3","I5"],["I2","I4"],["I4","I6"],["I5","I7"]];
+  const dep=$("#dep"), svg=$(".dep-lines",dep), out=$("#dep-out");
+  let slipped="I3";
+  const downstream=id=>{const s=new Set(),st=[id];while(st.length){const x=st.pop();edges.forEach(([a,b])=>{if(a===x&&!s.has(b)){s.add(b);st.push(b);}});}return s;};
+  function drawDeps(){
+    const box=dep.getBoundingClientRect(); if(!box.width) return;
+    const hit=downstream(slipped);
+    svg.setAttribute("viewBox",`0 0 ${box.width} ${box.height}`);
+    svg.innerHTML=edges.map(([a,b])=>{
+      const A=$(`.node[data-id="${a}"]`,dep).getBoundingClientRect(), B=$(`.node[data-id="${b}"]`,dep).getBoundingClientRect();
+      const x1=A.right-box.left, y1=A.top+A.height/2-box.top, x2=B.left-box.left, y2=B.top+B.height/2-box.top, mx=(x1+x2)/2;
+      const live=(a===slipped||hit.has(a))&&hit.has(b);
+      return `<path d="M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}" fill="none" stroke="${live?"#B23A2E":"#C3CCD5"}" stroke-width="${live?2.5:1.5}" ${live?"":'stroke-dasharray="4 4"'}/>`;
+    }).join("");
+  }
+  function slip(id){
+    slipped=id; const hit=downstream(id);
+    $$(".node",dep).forEach(n=>{const x=n.dataset.id; n.classList.toggle("slip",x===id); n.classList.toggle("hit",hit.has(x)); n.classList.toggle("calm",x!==id&&!hit.has(x)); n.setAttribute("aria-pressed",x===id);});
+    const safe=Object.keys(names).filter(x=>x!==id&&!hit.has(x));
+    out.innerHTML=hit.size
+      ?`If <b>${names[id]}</b> slips, ${[...hit].map(x=>"<b>"+names[x]+"</b>").join(" and ")} ${hit.size>1?"are":"is"} at risk. ${safe.join(", ")} can keep moving.`
+      :`Nothing downstream depends on <b>${names[id]}</b>, so a slip delays only that initiative.`;
+    drawDeps();
+  }
+  $$(".node",dep).forEach(n=>n.addEventListener("click",()=>slip(n.dataset.id)));
+  window.addEventListener("resize",drawDeps);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(drawDeps);
+  slip("I3");
+
+  /* benefit 3: RACI lookup (from the RACI matrix) */
+  const raci=[
+    ["Budget allocation","CFO","CIO; CPO","CTO; CDO; CISO; BU GMs","Eno Product Lead; Slingshot GM","Investment allocation is an enterprise capital decision that trades off initiatives and business priorities."],
+    ["Architecture standards","CTO","CISO; Head Enterprise Data Tech","CIO; CDO; Eno Lead; Slingshot GM","BU GMs","The CTO owns the target architecture and has final say on standards and exceptions for shared platforms."],
+    ["Data governance","CDO","CISO; Head Enterprise Data Tech; BU GMs","CIO; CTO; CPO","Eno Lead; Slingshot GM","The CDO owns enterprise data quality, ownership, access and policy across business units."],
+    ["Initiative prioritization","CPO","CIO; BU GMs","CFO; CTO; CDO; CISO","Eno Lead; Slingshot GM","The CPO balances customer value, strategic fit and limited delivery capacity."],
+    ["Vendor and partnership decisions","CIO","CTO; CISO","CFO; CDO; CPO; Slingshot GM","BU GMs; Eno Lead","The CIO is accountable for enterprise technology relationships and their long-term operating impact."],
+    ["Eno scale and channel expansion","Eno Product Lead","Eno Product Lead; CISO","CIO; CTO; CDO; CPO; BU GMs","Slingshot GM","The Eno Product Lead owns performance, adoption and scaling decisions for the assistant."],
+    ["Slingshot internal vs external priorities","Slingshot GM","CTO; Head Enterprise Data Tech","CFO; CIO; CDO; CPO; BU GMs","Eno Lead","The Slingshot GM owns trade-offs between external customer commitments and internal platform needs."]
+  ];
+  const rc=$("#raci-chips"), card=$("#raci-card");
+  rc.innerHTML=raci.map((r,i)=>`<button type="button" data-i="${i}" aria-pressed="${i===0}">${r[0]}</button>`).join("");
+  function showRaci(i){
+    const r=raci[i];
+    $$("button",rc).forEach((b,j)=>b.setAttribute("aria-pressed",i===j));
+    card.innerHTML=`<div class="acc"><span>ACCOUNTABLE</span><b>${r[1]}</b></div>
+      <dt>R</dt><dd>${r[2]}</dd><dt>C</dt><dd>${r[3]}</dd><dt>I</dt><dd>${r[4]}</dd><p class="why">${r[5]}</p>`;
+  }
+  rc.addEventListener("click",e=>{const b=e.target.closest("button"); if(b) showRaci(+b.dataset.i);});
+  showRaci(0);
+
+  /* benefit 4: technology vs people lens */
+  const list=$("#lens-list"), lo=$("#lens-out"), lens=$$(".seg [data-lens]");
+  function setLens(k){
+    lens.forEach(b=>b.setAttribute("aria-pressed",b.dataset.lens===k));
+    list.classList.toggle("tech",k==="tech");
+    if(k==="tech"){lo.className="verdict on";lo.innerHTML="<b>Looks ready.</b> Every foundation measure shown is on track.";}
+    else {lo.className="verdict off";lo.innerHTML="<b>Not ready yet.</b> The Slingshot GM role is open, so Slingshot has no accountable owner for its priorities when Run begins.";}
+  }
+  lens.forEach(b=>b.addEventListener("click",()=>setLens(b.dataset.lens)));
+  setLens("tech");
+
+  /* 4. stats count up, claim highlighter */
+  const stats=$$(".stats b[data-count]");
+  if(!reduce&&"IntersectionObserver" in window){
+    stats.forEach(b=>b.textContent="0");
+    const so=new IntersectionObserver(es=>es.forEach(e=>{ if(!e.isIntersecting) return; so.unobserve(e.target);
+      const end=+e.target.dataset.count,t0=performance.now();
+      const step=t=>{const k=Math.min(1,(t-t0)/900); e.target.textContent=Math.round(end*(1-Math.pow(1-k,3))); if(k<1) requestAnimationFrame(step);};
+      requestAnimationFrame(step);}),{threshold:.6});
+    stats.forEach(b=>so.observe(b));
+  }
+  const nov=$("#novelty"), see=$("#claim-see");
+  const where={seq:["roadmap.html","See it in the roadmap"],src:["roadmap.html","See the sources in the roadmap"],dash:["dashboard.html","See it in the dashboard"],exp:["raci.html","See it in the RACI"]};
+  $$(".claim",nov).forEach(b=>b.addEventListener("click",()=>{
+    const on=b.getAttribute("aria-pressed")!=="true";
+    $$(".claim",nov).forEach(x=>x.setAttribute("aria-pressed",x===b&&on));
+    nov.classList.toggle("focus",on);
+    $$("[data-s]",nov).forEach(s=>s.classList.toggle("on",on&&s.dataset.s===b.dataset.c));
+    if(on){see.href=where[b.dataset.c][0]; see.innerHTML=where[b.dataset.c][1]+" &rarr;"; see.hidden=false;} else see.hidden=true;
+  }));
+
+  select(0,false);
+})();
+</script>
+</body>
+</html>
