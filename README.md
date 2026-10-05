@@ -1,7 +1,6 @@
 # Group-4-Transformation-Roadmap
-## Naming contract
-All pages link to each other using these exact filenames. Do not rename files.
-Lowercase only: GitHub Pages treats `raci.html` and `RACI.html` as different files.
+
+
 
 | File | Owner | Contents |
 |---|---|---|
